@@ -31,6 +31,14 @@ class Article
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $image = null; // Ajout de la propriété image
 
+    #[ORM\ManyToOne(targetEntity: Destination::class, inversedBy: 'articles')] // Add ManyToOne relation with Destination
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Destination $destination = null;
+
+    #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'articles')] // Add ManyToOne relation with Theme
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Theme $theme = null;
+
 
     /**
      * @var Collection<int, Comment>
@@ -133,6 +141,29 @@ class Article
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+    public function getDestination(): ?Destination
+    {
+        return $this->destination;
+    }
+
+    public function setDestination(?Destination $destination): self
+    {
+        $this->destination = $destination;
+
+        return $this;
+    }
+
+    public function getTheme(): ?Theme
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(?Theme $theme): self
+    {
+        $this->theme = $theme;
 
         return $this;
     }
