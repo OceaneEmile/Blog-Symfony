@@ -28,6 +28,10 @@ class Article
     #[ORM\Column(length: 255)]
     private ?string $author = null;
 
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $image = null; // Ajout de la propriété image
+
+
     /**
      * @var Collection<int, Comment>
      */
@@ -121,4 +125,16 @@ class Article
 
         return $this;
     }
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+    
 }

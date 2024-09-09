@@ -28,7 +28,6 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
                 $manager->persist($comment);
             }
         }
-
         $manager->flush();
     }
 

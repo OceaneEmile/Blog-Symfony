@@ -21,7 +21,7 @@ class UserFixtures extends Fixture
 
         for ($i = 1; $i <= 10; $i++) {
         $user = new User();
-        $username = 'user' . $i; // Assurez-vous que cette valeur n'est pas NULL
+        $username = 'user' . $i; 
         $user->setUsername($username);
         $user->setEmail("manager@manager.fr");
         $user->setRoles(['ROLE_ADMIN']); // On donne le role admin a cet user
