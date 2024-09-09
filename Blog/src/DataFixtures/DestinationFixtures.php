@@ -1,5 +1,4 @@
 <?php
-
 namespace App\DataFixtures;
 
 use App\Entity\Destination;
@@ -13,15 +12,20 @@ class DestinationFixtures extends Fixture
     {
         $faker = Factory::create('fr_FR');
 
-        //Create fake destinations
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             $destination = new Destination();
-            $destination->setName($faker->country());
-            $destination->setImage($faker->imageUrl(640, 480, 'country', true)); 
+            $destination->setName($faker->city());
             $destination->setDescription($faker->paragraph());
+            // Add an image to each destination
+            $imageUrl = 'https://picsum.photos/seed/voyage' . $i . '/800/600';
+            $destination->setImage($imageUrl);
             $manager->persist($destination);
+
+
+            // Add a reference to each destination
+            $this->addReference('destination_' . $i, $destination);
         }
+
         $manager->flush();
     }
-
 }

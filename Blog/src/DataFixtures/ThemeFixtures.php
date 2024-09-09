@@ -1,5 +1,4 @@
 <?php
-
 namespace App\DataFixtures;
 
 use App\Entity\Theme;
@@ -13,21 +12,15 @@ class ThemeFixtures extends Fixture
     {
         $faker = Factory::create('fr_FR');
 
-        // Create fake themes
-        $themes = [];
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             $theme = new Theme();
             $theme->setName($faker->word());
             $manager->persist($theme);
-            $themes[] = $theme;
-        }
-        $manager->flush();
-    }
 
-    public function getDependencies()
-    {
-        return [
-            ArticleFixtures::class,
-        ];
+            // AAdd a reference to each theme
+            $this->addReference('theme_' . $i, $theme);
+        }
+
+        $manager->flush();
     }
 }

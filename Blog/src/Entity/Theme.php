@@ -16,9 +16,11 @@ class Theme
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['theme:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Article::class)]
+    #[Groups('theme:read')]
     private Collection $articles;
 
     public function __construct()

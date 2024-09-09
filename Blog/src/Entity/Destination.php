@@ -13,18 +13,22 @@ class Destination
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['destination:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['destination:read'])]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'destination', targetEntity: Article::class)]
+    #[Groups('destination:read')]
     private Collection $articles;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['destination:read'])]
     private ?string $image = null;  
     public function __construct()
     {
@@ -47,18 +51,19 @@ class Destination
 
         return $this;
     }
-
+    /**
+     * @return string|null
+     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
-
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
         return $this;
     }
+
 
     /**
      * @return Collection<int, Article>

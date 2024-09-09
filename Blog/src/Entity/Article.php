@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -17,26 +19,33 @@ class Article
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['article:read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['article:read'])]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['article:read'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['article:read'])]
     private ?string $author = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[Groups(['article:read'])]
     private ?string $image = null; // Ajout de la propriété image
 
     #[ORM\ManyToOne(targetEntity: Destination::class, inversedBy: 'articles')] // Add ManyToOne relation with Destination
     #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['article:read'])]
     private ?Destination $destination = null;
 
     #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'articles')] // Add ManyToOne relation with Theme
     #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['article:read'])]
     private ?Theme $theme = null;
 
 
