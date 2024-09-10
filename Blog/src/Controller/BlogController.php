@@ -29,9 +29,9 @@ class BlogController extends AbstractController
         // return JsonResponse
         return $this->json(
             [
-                'articles' => $articles,
-                'destinations' => $destinations,
-                'themes' => $themes
+                'article' => $articles,
+                'destination' => $destinations,
+                'theme' => $themes
             ],
             200,
             [],

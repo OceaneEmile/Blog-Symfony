@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DestinationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DestinationRepository::class)]
@@ -17,6 +18,7 @@ class Destination
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['destination:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -24,12 +26,13 @@ class Destination
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'destination', targetEntity: Article::class)]
-    #[Groups('destination:read')]
+    #[Groups(['destination:articles'])]
     private Collection $articles;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['destination:read'])]
     private ?string $image = null;  
+    
     public function __construct()
     {
         $this->articles = new ArrayCollection();

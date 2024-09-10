@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ThemeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ThemeRepository::class)]
@@ -13,6 +14,7 @@ class Theme
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['theme:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -20,7 +22,7 @@ class Theme
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Article::class)]
-    #[Groups('theme:read')]
+    #[Groups(['theme:article'])]
     private Collection $articles;
 
     public function __construct()
