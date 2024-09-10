@@ -14,11 +14,10 @@ class Destination
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['destination:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['destination:read'])]
+    #[Groups(['destination:show'])]
     private ?string $name = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -26,7 +25,6 @@ class Destination
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'destination', targetEntity: Article::class)]
-    #[Groups(['destination:articles'])]
     private Collection $articles;
 
     #[ORM\Column(length: 255, nullable: true)]

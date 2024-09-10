@@ -13,46 +13,43 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(length: 255)]
-    #[Groups(['article:read'])]
-    private ?string $title = null;
+        #[ORM\Id]
+        #[ORM\GeneratedValue]
+        #[ORM\Column(type: 'integer')]
+        #[Groups(['article:read'])]
+        private ?int $id = null;
+    
+        #[ORM\Column(type: 'string', length: 255)]
+        private ?string $title = null;
+    
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['article:read'])]
+    #[Groups(['article:read', 'article:write'])]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['article:read'])]
+    #[Groups(['article:read', 'article:write'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['article:read'])]
+    #[Groups(['article:read', 'article:write'])]
     private ?string $author = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    #[Groups(['article:read'])]
+    #[Groups(['article:read', 'article:write'])]
     private ?string $image = null; // Ajout de la propriété image
 
     #[ORM\ManyToOne(targetEntity: Destination::class, inversedBy: 'articles')] // Add ManyToOne relation with Destination
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['article:read'])]
+    #[Groups(['destination:show', 'destination:read'])]
     private ?Destination $destination = null;
 
     #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'articles')] // Add ManyToOne relation with Theme
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['article:read'])]
+    #[Groups(['article:read', 'theme:read'])]
     private ?Theme $theme = null;
 
-
-    /**
-     * @var Collection<int, Comment>
-     */
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article', cascade: ['remove'])]
     private Collection $comments;
 
     public function __construct()
