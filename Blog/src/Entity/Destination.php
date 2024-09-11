@@ -17,14 +17,14 @@ class Destination
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['destination:show'])]
+    #[Groups(['destination:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['destination:read'])]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'destination', targetEntity: Article::class)]
+    #[ORM\OneToMany(mappedBy: 'destination', targetEntity: Article::class, cascade: ['remove'])]
     private Collection $articles;
 
     #[ORM\Column(length: 255, nullable: true)]
