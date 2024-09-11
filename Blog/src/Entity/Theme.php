@@ -21,7 +21,7 @@ class Theme
     #[Groups(['theme:read'])]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Article::class)]
+    #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Article::class, cascade: ['remove'])]
     #[Groups(['theme:article'])]
     private Collection $articles;
 
