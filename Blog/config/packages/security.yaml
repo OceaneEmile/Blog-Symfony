@@ -1,17 +1,55 @@
 security:
+    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            # user de type Doctrine
+            entity:
+                # FQCN de la classe du User
+                class: App\Entity\User
+                # identifiant de connexion
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        # On va mettre en place des regles de séurité sur la connexion a l'api
+        # Pour ca, on va se servir de LexikJWT
+        login:
+            pattern: ^/api/login # Indique que ce firewall s'applique aux URL qui commence par /api/login
+            stateless: true # Signifie que le firewall est sans état, cad qu'il n'utilise pas de session PHP pour stocker les informations de l'utilisateur, courant dans les api ou on doit etre authentifiée a chaque requête
+            json_login: # définit la maniere dont l'auth doit etre gérée (pour ce chemin), ici authentification basée sur JSON (normal on utilsie les JWT)
+                check_path: /api/login_check # La route de notre application, ou la requête d'authentification sera envoyée, c'est la ou on va devoire faire la requete pour recuperer notre token (a l'aide de notre username et password)
+                success_handler: lexik_jwt_authentication.handler.authentication_success # Les handlers qui gerent ce qui se passe si l'auth réussit ou echoue.
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure # pareil que le success_handler
+            custom_authenticator: App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                # by default, the feature is enabled by checking a checkbox in the
+                # login form, uncomment the following line to always enable it.
+                #always_remember_me: true
+        api: # Regle de firewall pour TOUTES les routes de l'api
+            pattern: ^/api # ici on dit que ce firewall s'applique pour TOUTES les routes qui commence par le endpoint /api
+            stateless: true # encore une fois, signifie que le firewall est sans etat (on stock rien)
+            jwt: ~ # on indique que ce firewall utilise JWT pour l'auth, toutes les requetes effectués vers l'API doivent inclure un JWT valide pour etre autorisé.
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -22,8 +60,38 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+
+        # Front : Si user ANONYME : page d'accueil + fiche film seulement
+        # => rien à faire, c'est ouvert par défaut
+
+        # Front : Si ROLE_USER : ajouter une critique sur un film, gérer ses favoris.
+        # on "convertit" tout ou partie du chemin que l'on souhaite restreindre
+        # par ex. ici : @Route => /movie/{id}/review/add
+        # en vrai : /movie/8/review/add
+        - { path: ^/movie/\d+/review/add, roles: ROLE_USER }
+        # tout chemin qui commence par /favorites
+        - { path: ^/favorites, roles: ROLE_USER }
+
+        # /!\ Attention l'ordre est crucial / au premier chemin trouvé, on s'arrête
+        # @see https://symfony.com/doc/5.4/security.html#add-code-to-deny-access
+        # => on place les routes les plus "secures" en premier
+        # Admin : Sécuriser toutes les routes d'ajout, modification/ suppression avec ROLE_ADMIN.
+        - { path: ^/back/movie/new, roles: ROLE_ADMIN }
+        - { path: ^/back/movie/\d+/edit, roles: ROLE_ADMIN }
+        # attention l'action delete partage le même "path" que show, mais pas la même méthode HTTP
+        # on ajoute donc ici une condition pour la méthode POST (formulaire de suppression)
+        - { path: ^/back/movie/\d+, methods: POST, roles: ROLE_ADMIN }
+        # Admin : Si ROLE_MANAGER : accès aux pages de listes movie, genres etc. et pages show (si existantes).
+        - { path: ^/back, roles: ROLE_MANAGER }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS } # indique que l'accès a la route /api/login est publique
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY } # indique que l'acces a tout ce qui commence par /api nécéssite une authentification
+
+    # on décide de faire hériter tous les rôles en cascade
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_MANAGER
+        ROLE_MANAGER: ROLE_USER
+    # ADMIN aura les rôles MANAGER et USER
+    # MANAGER aura aussi le rôle USER
 
 when@test:
     security:

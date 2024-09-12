@@ -3,3 +3,6 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+# La route qui va permettre a lexikJWT d'intercepter la requête pour pouvoir se connecter
+api_login_check:
+    path: /api/login_check
