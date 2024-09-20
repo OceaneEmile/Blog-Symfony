@@ -40,4 +40,15 @@ class ArticleRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    // src/Repository/ArticleRepository.php
+
+public function findByDestination(int $destinationId): array
+{
+    return $this->createQueryBuilder('a')
+        ->andWhere('a.destination = :destinationId')
+        ->setParameter('destinationId', $destinationId)
+        ->getQuery()
+        ->getResult();
+}
+
 }

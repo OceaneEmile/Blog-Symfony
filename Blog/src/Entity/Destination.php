@@ -14,6 +14,7 @@ class Destination
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['destination:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -25,6 +26,7 @@ class Destination
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'destination', targetEntity: Article::class, cascade: ['remove'])]
+    #[Groups(['destination:article'])]
     private Collection $articles;
 
     #[ORM\Column(length: 255, nullable: true)]

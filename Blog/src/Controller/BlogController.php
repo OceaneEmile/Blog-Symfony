@@ -34,7 +34,7 @@ class BlogController extends AbstractController
                 'theme' => $themes
             ],
             200,
-            [],
+            ['Content-Type' => 'application/json'],
             ['groups' => ['article:read', 'destination:read', 'theme:read']]  // Ajout des groupes
         );
     }

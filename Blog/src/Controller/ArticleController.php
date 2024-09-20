@@ -94,15 +94,15 @@ class ArticleController extends AbstractController
     #[Route('/api/articles/destination/{destinationId}', name: 'get_articles_by_destination', methods: ['GET'])]
     public function getArticlesByDestination(int $destinationId, ArticleRepository $articleRepo): JsonResponse
     {
-        $articles = $articleRepo->findBy(['destination' => $destinationId]);
-        return $this->json($articles, 200, [], ['groups' => 'destination:show','destination:read']);
+        $articles = $articleRepo->findByDestination($destinationId);
+        return $this->json($articles, 200, [], ['groups' => 'article:read']);
     }
     // - **GET** `/api/articles/theme/{themeId}` : Retrieve articles by theme. for the menu
     #[Route('/api/articles/theme/{themeId}', name: 'get_articles_by_theme', methods: ['GET'])]
     public function getArticlesByTheme(int $themeId, ArticleRepository $articleRepo): JsonResponse
     {
         $articles = $articleRepo->findBy(['theme' => $themeId]);
-        return $this->json($articles, 200, [], ['groups' => 'theme:read','theme:article']);
+        return $this->json($articles, 200, [], ['groups' => 'article:read']);
     }
 }
 

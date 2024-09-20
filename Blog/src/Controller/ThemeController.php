@@ -20,7 +20,7 @@ class ThemeController extends AbstractController
         $themes = $themeRepo->findAll();
 
         // Return the list of themes as a JSON response with HTTP status 200.
-        return $this->json($themes, 200, [], ['groups' => 'theme:read']);
+        return $this->json($themes, 200, ['Content-Type' => 'application/json'], ['groups' => 'theme:read']);
     }
 
     // **GET** `/api/themes/{id}` : Retrieve a specific theme by ID.

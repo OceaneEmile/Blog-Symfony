@@ -15,7 +15,7 @@ class AboutController extends AbstractController
         // data to return in the response body to modify later
         $data = [
             'controller_name' => 'AboutController',
-            'message' => 'Bienvenue sur mon blog de voyage !',
+            'message' => 'Qui suis-je ?',
             'status' => 'success'
         ];
 
