@@ -32,6 +32,9 @@ class Comment
     #[Groups(['comment:read'])]
     private ?Article $article = null;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $email = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -82,6 +85,17 @@ class Comment
     {
         $this->article = $article;
 
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
         return $this;
     }
 }

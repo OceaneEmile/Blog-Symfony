@@ -22,6 +22,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
             for ($i = 1; $i <= 5; $i++) {
                 $comment = new Comment();
                 $comment->setContent($faker->paragraph);
+                $comment->setEmail($faker->email);
                 $comment->setCreatedAt($faker->dateTimeThisYear);
                 $comment->setAuthor($faker->name);
                 $comment->setArticle($article);

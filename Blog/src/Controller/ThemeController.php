@@ -54,7 +54,6 @@ class ThemeController extends AbstractController
         // Create a new Theme entity and set its properties.
         $theme = new Theme();
         $theme->setName($data['name']);
-        $theme->setName($data['name']);
 
         // Persist the new theme to the database.
         $em->persist($theme);

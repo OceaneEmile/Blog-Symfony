@@ -24,6 +24,21 @@ class Theme
     #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Article::class, cascade: ['remove'])]
     #[Groups(['theme:article'])]
     private Collection $articles;
+    
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['theme:read', 'theme:write'])]
+    private ?string $image = null;
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
 
     public function __construct()
     {

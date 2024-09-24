@@ -52,6 +52,7 @@ class CommentController extends AbstractController
         $comment = new Comment();
         $comment->setContent($data['content']);
         $comment->setAuthor($data['author']);
+        $comment->setEmail($data['email']);
         $comment->setArticle($article);
         $comment->setCreatedAt(new \DateTime());
 
